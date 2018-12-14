@@ -62,7 +62,7 @@ func newAgo(start *time.Time, now *time.Time) Ago {
 }
 
 func detectDistance(start time.Time, now time.Time) distance {
-	duration := start.Sub(now)
+	duration := now.Sub(start)
 
 	if 24 < duration.Hours() {
 		if hoursInYear < duration.Hours() {

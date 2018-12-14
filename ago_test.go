@@ -1,6 +1,7 @@
 package ago
 
 import (
+	"fmt"
 	"strings"
 	"testing"
 	"time"
@@ -11,13 +12,22 @@ type ti struct {
 	now   time.Time
 }
 
+func TestFromNow(t *testing.T) {
+	start := parse("2018-12-14T12:34:56")
+	fmt.Println(FromNow(start))
+	start = parse("2018-12-11T12:34:56")
+	fmt.Println(FromNow(start))
+	start = parse("2018-10-11T12:34:56")
+	fmt.Println(FromNow(start))
+}
+
 func TestDetectDistance(t *testing.T) {
 	var tests = []struct {
 		name     string
 		expected distance
 		given    ti
 	}{
-		{"1min", distance{1, MinutesAgo}, ti{parse("2018-12-14T12:34:05"), parse("2018-12-14T12:35:03")}},
+		{"1min", distance{1, MinutesAgo}, ti{parse("2018-12-14T12:34:05"), parse("2018-12-14T12:35:06")}},
 		{"12hour", distance{12, HoursAgo}, ti{parse("2018-12-14T10:34:05"), parse("2018-12-14T22:40:03")}},
 	}
 	for _, tt := range tests {
@@ -36,7 +46,7 @@ func TestDetectDistance(t *testing.T) {
 
 func parse(str string) time.Time {
 	if !strings.Contains(str, "+") {
-		str = str + "+00:00"
+		str = str + "+09:00"
 	}
 	t, err := time.Parse(time.RFC3339, str) // "2006-01-02T15:04:05+07:00"
 	if err != nil {
